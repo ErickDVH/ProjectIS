@@ -65,3 +65,7 @@ C:\Users\andre\Desktop\Integracao de Sistemas\ProjectApi\Project\obj\Debug\Proje
 C:\Users\andre\Desktop\Integracao de Sistemas\ProjectApi\Project\obj\Debug\Project.csproj.CopyComplete
 C:\Users\andre\Desktop\Integracao de Sistemas\ProjectApi\Project\obj\Debug\Project.dll
 C:\Users\andre\Desktop\Integracao de Sistemas\ProjectApi\Project\obj\Debug\Project.pdb
+C:\Users\andre\Desktop\Integracao de Sistemas\ProjectIS\ProjectApi\Project\obj\Debug\Project.csproj.AssemblyReference.cache
+C:\Users\andre\Desktop\Integracao de Sistemas\ProjectIS\ProjectApi\Project\obj\Debug\Project.csproj.CoreCompileInputs.cache
+C:\Users\andre\Desktop\Integracao de Sistemas\ProjectIS\ProjectApi\Project\obj\Debug\Project.dll
+C:\Users\andre\Desktop\Integracao de Sistemas\ProjectIS\ProjectApi\Project\obj\Debug\Project.pdb

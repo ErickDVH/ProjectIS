@@ -11,5 +11,6 @@ namespace Project.Models
         public string Content { get; set; }
         public DateTime Creation_dt { get; set; }
         public int Parent { get; set; }
+        public string Res_type { get; set; }
     }
 }
