@@ -136,7 +136,7 @@ namespace Project.Controllers
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@Name", app.Name);
-                cmd.Parameters.AddWithValue("@Creation_dt", app.Creation_dt);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
                 int num_records = cmd.ExecuteNonQuery();
 
@@ -172,7 +172,7 @@ namespace Project.Controllers
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@Name", data.Content);
-                cmd.Parameters.AddWithValue("@Creation_dt", data.Creation_dt);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
 
 
