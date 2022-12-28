@@ -11,7 +11,7 @@ namespace Project.Controllers
     public class DataController : ApiController
     {
 
-        //Teste teste teste
+        string connection_string = Properties.Settings.Default.connStr;
 
         // GET api/<controller>
         [Route("api/data/")]
