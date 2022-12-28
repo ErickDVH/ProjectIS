@@ -121,7 +121,7 @@ namespace Project.Controllers
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@Content", data.Content);
-                cmd.Parameters.AddWithValue("@Creation_dt", data.Creation_dt);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 cmd.Parameters.AddWithValue("@Parent", data.Parent);
                 cmd.Parameters.AddWithValue("@Res_type", data.Res_type);
 
@@ -159,7 +159,7 @@ namespace Project.Controllers
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@Content", data.Content);
-                cmd.Parameters.AddWithValue("@Creation_dt", data.Creation_dt);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 cmd.Parameters.AddWithValue("@Parent", data.Parent);
                 cmd.Parameters.AddWithValue("@Res_type", data.Res_type);
 
