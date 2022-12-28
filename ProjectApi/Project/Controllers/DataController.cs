@@ -10,7 +10,6 @@ namespace Project.Controllers
 {
     public class DataController : ApiController
     {
-        string connection_string = Properties.Settings.Default.connStr;
 
         //Teste teste teste
 
