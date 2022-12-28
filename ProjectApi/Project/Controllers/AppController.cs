@@ -36,7 +36,7 @@ namespace Project.Controllers
                         Id = (int)reader["Id"],
                         Name = (string)reader["Name"],
                         Creation_dt = (DateTime)reader["Creation_dt"],
-                        
+
                     };
 
                     datas.Add(newApp);
@@ -173,8 +173,8 @@ namespace Project.Controllers
 
                 cmd.Parameters.AddWithValue("@Name", data.Content);
                 cmd.Parameters.AddWithValue("@Creation_dt", data.Creation_dt);
-                
-                
+
+
 
                 int num_records = cmd.ExecuteNonQuery();
 
