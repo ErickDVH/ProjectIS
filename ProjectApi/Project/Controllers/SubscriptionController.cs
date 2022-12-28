@@ -91,7 +91,7 @@ namespace Project.Controllers
             }
         }
 
-        [Route("api/modules")]
+        [Route("api/subscription")]
         [HttpPost]
         public IHttpActionResult StoreSubscription(Subscription subscription)
         {
@@ -198,5 +198,4 @@ namespace Project.Controllers
 
     }
 
-}
 }
