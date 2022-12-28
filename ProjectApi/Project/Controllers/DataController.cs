@@ -12,6 +12,8 @@ namespace Project.Controllers
     {
         string connection_string = Properties.Settings.Default.connStr;
 
+        //Teste teste teste
+
         // GET api/<controller>
         [Route("api/data/")]
         public IEnumerable<Data> GetAllData()
