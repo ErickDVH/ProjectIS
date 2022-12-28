@@ -2,10 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\ProjectApi",
-    "\\ProjectApi\\Project",
-    "\\ProjectApi\\Project\\App_Data",
-    "\\ProjectApi\\Project\\Models"
+    "\\ProjectApi\\TestApplication"
   ],
-  "SelectedNode": "\\ProjectApi\\Project\\Models\\Data.cs",
+  "SelectedNode": "\\ProjectApi\\ProjectApi.sln",
   "PreviewInSolutionExplorer": false
 }
