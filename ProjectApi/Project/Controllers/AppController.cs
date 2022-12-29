@@ -57,8 +57,8 @@ namespace Project.Controllers
         }
 
         // GET api/<controller>/5
-        [Route("api/Application/{id:int}")]
-        public IHttpActionResult GetProductById(int id)
+        [Route("api/Application/{id}")]
+        public IHttpActionResult GetApplicationById(string id)
         {
             Data data = null;
             SqlConnection conn = null;
@@ -170,7 +170,7 @@ namespace Project.Controllers
 
                 string sql = "UPDATE Data SET Name = @Name, Creation_dt = @Creation_dt WHERE Id = @Id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
+                cmd.Parameters.AddWithValue("@Id", id);
                 cmd.Parameters.AddWithValue("@Name", data.Content);
                 cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 

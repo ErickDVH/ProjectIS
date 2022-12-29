@@ -15,8 +15,8 @@ namespace Project.Controllers
         private List<Module> modules;
 
         // GET All api/<controller>
-        [Route("api/modules")]
-        public IEnumerable<Module> GetAllModules()
+        [Route("api/application/{applicationId}/module")]
+        public IEnumerable<Module> GetAllModules(string applicationId)
         {
 
             SqlConnection conn = null;
@@ -24,8 +24,11 @@ namespace Project.Controllers
             {
                 conn = new SqlConnection(connection_string);
                 conn.Open();
-                string sql = "SELECT * FROM modules";
+                string sql = "SELECT * FROM Module WHERE Parent = " +
+                "(SELECT id FROM dbo.Application WHERE Name = @applicationId);";
                 SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@applicationId", applicationId);
+
 
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
@@ -56,17 +59,20 @@ namespace Project.Controllers
         }
 
         // GET Id api/<controller>/5
-        [Route("api/modules/{id}")]
-        public IHttpActionResult GetModuleById(int id)
+        [Route("api/application/{applicationId}/module/{moduleId}")]
+        public IHttpActionResult GetModuleById(string applicationId, string moduleId)
         {
             SqlConnection conn = null;
             try
             {
                 conn = new SqlConnection(connection_string);
                 conn.Open();
-                string sql = "SELECT * FROM modules WHERE Id=@id";
+                string sql = "SELECT * FROM Module WHERE Name=@moduleId AND Parent = "+
+                                    "(SELECT Id FROM dbo.Application WHERE Name = @applicationId);";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@appplicationId", applicationId);
+                cmd.Parameters.AddWithValue("@moduleId", moduleId);
 
                 if (this.modules[0] == null)
                 {
@@ -87,9 +93,9 @@ namespace Project.Controllers
         }
 
         // POST api/<controller>
-        [Route("api/modules")]
+        [Route("api/application/{applicationId}/module")]
         [HttpPost]
-        public IHttpActionResult StoreModule(Module module)
+        public IHttpActionResult StoreModule(string applicationId,Module module)
         {
             SqlConnection conn = null;
             try
@@ -98,9 +104,10 @@ namespace Project.Controllers
                 conn.Open();
                 string sql = "INSERT INTO modules (Name, Creation_dt, Parent) VALUES (@name, @creation_dt, @parent)";
                 SqlCommand cmd = new SqlCommand(sql, conn);
+                int parent = getApplicationId(applicationId);
                 cmd.Parameters.AddWithValue("@name", module.Name);
                 cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                cmd.Parameters.AddWithValue("@parent", module.Parent);
+                cmd.Parameters.AddWithValue("@parent", parent);
 
                 int rows = cmd.ExecuteNonQuery();
                 conn.Close();
@@ -122,9 +129,9 @@ namespace Project.Controllers
         }
 
         // PUT api/<controller>/5
-        [Route("api/modules/{id}")]
+        [Route("api/application/{applicationId}/module/{id}")]
         [HttpPut]
-        public IHttpActionResult UpdateModule(Module module)
+        public IHttpActionResult UpdateModule(string applicationId, string moduleId,Module module)
         {
             SqlConnection conn = null;
 
@@ -132,12 +139,15 @@ namespace Project.Controllers
             {
                 conn = new SqlConnection(connection_string);
                 conn.Open();
-                string sql = "UPDATE modules SET Name=@name, Creation_dt=@creation_dt, Parent=@parent WHERE Id=@id";
+                string sql = "UPDATE modules SET Name=@name, Creation_dt=@creation_dt, Parent=@parent WHERE Id=@moduleId AND Parent = " +
+                "(SELECT Id from dbo.Application WHERE Name = @applicationID);"; 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@name", module.Name);
                 cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 cmd.Parameters.AddWithValue("@parent", module.Parent);
-                cmd.Parameters.AddWithValue("@id", module.Id);
+                cmd.Parameters.AddWithValue("@moduleId", moduleId);
+                cmd.Parameters.AddWithValue("@applicationId", applicationId);
+
 
                 int rows = cmd.ExecuteNonQuery();
                 conn.Close();
@@ -159,18 +169,20 @@ namespace Project.Controllers
         }
 
         // DELETE api/<controller>/5
-        [Route("api/modules/{id}")]
+        [Route("api/application/{applicationId}/module/{id}")]
         [HttpDelete]
-        public IHttpActionResult DeleteModule(int id)
+        public IHttpActionResult DeleteModule(string applicationId, string moduleId)
         {
             SqlConnection conn = null;
             try
             {
                 conn = new SqlConnection(connection_string);
                 conn.Open();
-                string sql = "DELETE FROM modules WHERE Id=@id";
+                string sql = "DELETE FROM modules WHERE Id=@moduleId AND Parent=@applicationId";
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@moduleId", moduleId);
+                cmd.Parameters.AddWithValue("@applicationId", applicationId);
+
 
                 int rows = cmd.ExecuteNonQuery();
                 conn.Close();
@@ -189,6 +201,24 @@ namespace Project.Controllers
                 }
                 return InternalServerError();
             }
+        }
+
+        private int getApplicationId(string name)
+        {
+            SqlConnection conn = null;
+            int id;
+            conn = new SqlConnection(connection_string);
+            conn.Open();
+            string query = "SELECT Id from dbo.Application WHERE Name = @Name;";
+
+            SqlCommand cmd = new SqlCommand(query, conn);
+
+
+            cmd.Parameters.AddWithValue("@Name", name);
+            id = (int)cmd.ExecuteScalar();
+            conn.Close();
+         
+            return id;
         }
 
     }

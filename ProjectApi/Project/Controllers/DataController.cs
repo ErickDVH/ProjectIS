@@ -14,8 +14,8 @@ namespace Project.Controllers
         string connection_string = Properties.Settings.Default.connStr;
 
         // GET api/<controller>
-        [Route("api/data/")]
-        public IEnumerable<Data> GetAllData()
+        [Route("api/application/{applicationId}/data")]
+        public IEnumerable<Data> GetAllData(string applicationId)
         {
             List<Data> datas = new List<Data>();
             SqlConnection conn = null;
@@ -24,8 +24,11 @@ namespace Project.Controllers
                 conn = new SqlConnection(connection_string);
                 conn.Open();
 
-                string sql = "SELECT * FROM Data";
+                string sql = "SELECT * FROM Data WHERE Parent = " +
+                "(SELECT id FROM dbo.Application WHERE Name = @applicationId);";
                 SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@applicationId", applicationId);
+
 
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
@@ -57,8 +60,8 @@ namespace Project.Controllers
         }
 
         // GET api/<controller>/5
-        [Route("api/data/{id:int}")]
-        public IHttpActionResult GetProductById(int id)
+        [Route("api/application/{applicationId}/data/{id}")]
+        public IHttpActionResult GetDataById(string applicationId, string dataId)
         {
             Data data = null;
             SqlConnection conn = null;
@@ -67,10 +70,11 @@ namespace Project.Controllers
                 conn = new SqlConnection(connection_string);
                 conn.Open();
 
-                string sql = "SELECT * FROM Data WHERE Id = @IdData";
+                string sql = "SELECT * FROM Module WHERE Name=@dataId AND Parent = " +
+                                    "(SELECT Id FROM dbo.Application WHERE Name = @applicationId);";
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
-                cmd.Parameters.AddWithValue("@IdData", id);
+                cmd.Parameters.AddWithValue("@appplicationId", applicationId);
+                cmd.Parameters.AddWithValue("@dataId", dataId);
 
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -107,9 +111,9 @@ namespace Project.Controllers
 
         
         // POST api/<controller>
-        [Route("api/data/")]
+        [Route("api/application/{applicationId}/data")]
         [HttpPost]
-        public IHttpActionResult Post([FromBody] Data data)
+        public IHttpActionResult Post(string applicationId, [FromBody] Data data)
         {
             SqlConnection conn = null;
             try
@@ -119,10 +123,10 @@ namespace Project.Controllers
 
                 string sql = "INSERT INTO Data VALUES(@Content, @Creation_dt, @Parent, @Res_type)";
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
+                int parent = getApplicationId(applicationId);
                 cmd.Parameters.AddWithValue("@Content", data.Content);
                 cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                cmd.Parameters.AddWithValue("@Parent", data.Parent);
+                cmd.Parameters.AddWithValue("@Parent", parent);
                 cmd.Parameters.AddWithValue("@Res_type", data.Res_type);
 
                 int num_records = cmd.ExecuteNonQuery();
@@ -146,8 +150,8 @@ namespace Project.Controllers
         }
 
         // PUT api/<controller>/5
-        [Route("api/data/{id}")]
-        public IHttpActionResult Put(int id, [FromBody] Data data)
+        [Route("api/application/{applicationId}/data/{id}")]
+        public IHttpActionResult Put(string applicationId, string dataId, [FromBody] Data data)
         {
             SqlConnection conn = null;
             try
@@ -155,13 +159,16 @@ namespace Project.Controllers
                 conn = new SqlConnection(connection_string);
                 conn.Open();
 
-                string sql = "UPDATE Data SET Content = @Content, Creation_dt = @Creation_dt, Parent = @Parent, Res_type = @Res_type WHERE Id = @IdData";
+                string sql = "UPDATE Data SET Content = @Content, Creation_dt = @Creation_dt, Parent = @Parent, Res_type = @Res_type WHERE Id=@dataId AND Parent = " +
+                "(SELECT Id from dbo.Application WHERE Name = @applicationID);";
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@Content", data.Content);
                 cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 cmd.Parameters.AddWithValue("@Parent", data.Parent);
                 cmd.Parameters.AddWithValue("@Res_type", data.Res_type);
+                cmd.Parameters.AddWithValue("@dataId", dataId);
+                cmd.Parameters.AddWithValue("@applicationId", applicationId);
 
                 int num_records = cmd.ExecuteNonQuery();
 
@@ -184,8 +191,8 @@ namespace Project.Controllers
         }
 
         // DELETE api/<controller>/5
-        [Route("api/data/{id}")]
-        public IHttpActionResult Delete(int id)
+        [Route("api/application/{applicationId}/data/{id}")]
+        public IHttpActionResult Delete(string applicationId, string dataId)
         {
             SqlConnection conn = null;
             try
@@ -193,10 +200,11 @@ namespace Project.Controllers
                 conn = new SqlConnection(connection_string);
                 conn.Open();
 
-                string sql = "DELETE FROM Data WHERE Id = @IdData";
+                string sql = "DELETE FROM Data WHERE Id = @dataId";
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
-                cmd.Parameters.AddWithValue("@IdData", id);
+                cmd.Parameters.AddWithValue("@dataId", dataId);
+                cmd.Parameters.AddWithValue("@applicationId", applicationId);
 
                 int num_records = cmd.ExecuteNonQuery();
 
@@ -216,6 +224,23 @@ namespace Project.Controllers
                 }
                 return NotFound();
             }
+        }
+
+        private int getApplicationId(string name)
+        {
+            SqlConnection conn = null;
+            int id;
+            conn = new SqlConnection(connection_string);
+            conn.Open();
+            string query = "SELECT Id from dbo.Application WHERE Name = @Name;";
+
+            SqlCommand cmd = new SqlCommand(query, conn);
+
+            cmd.Parameters.AddWithValue("@Name", name);
+            id = (int)cmd.ExecuteScalar();
+            conn.Close();
+
+            return id;
         }
     }
 }
