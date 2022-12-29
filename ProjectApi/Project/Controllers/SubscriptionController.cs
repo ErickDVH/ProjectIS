@@ -18,7 +18,7 @@ namespace Project.Controllers
         {
             subscriptions = new List<Subscription>();
         }
-
+        /*
         [Route("api/application/{applicationId}/subscription")]
         public IEnumerable<Subscription> GetAllSubscriptions(string applicationId)
         {
@@ -93,7 +93,7 @@ namespace Project.Controllers
                 }
                 return NotFound();
             }
-        }
+        }*/
 
         [Route("api/application/{applicationId}/subscription")]
         [HttpPost]
@@ -131,7 +131,7 @@ namespace Project.Controllers
                 return NotFound();
             }
         }
-
+        /*
         [Route("api/application/{applicationId}/subscription/{id}")]
         [HttpPut]
         public IHttpActionResult UpdateSubscription(string applicationId, string subscriptionId, Subscription subscription)
@@ -169,6 +169,7 @@ namespace Project.Controllers
                 return NotFound();
             }
         }
+        */
 
         [Route("api/application/{applicationId}/subscription/{id}")]
         [HttpDelete]

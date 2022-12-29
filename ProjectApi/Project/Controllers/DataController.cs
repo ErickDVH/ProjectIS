@@ -12,7 +12,7 @@ namespace Project.Controllers
     {
 
         string connection_string = Properties.Settings.Default.connStr;
-
+        /*
         // GET api/<controller>
         [Route("api/application/{applicationId}/data")]
         public IEnumerable<Data> GetAllData(string applicationId)
@@ -108,7 +108,7 @@ namespace Project.Controllers
                 return NotFound();
             }
         }
-
+        */
         
         // POST api/<controller>
         [Route("api/application/{applicationId}/data")]
@@ -148,7 +148,7 @@ namespace Project.Controllers
                 return InternalServerError();
             }
         }
-
+        /*
         // PUT api/<controller>/5
         [Route("api/application/{applicationId}/data/{id}")]
         public IHttpActionResult Put(string applicationId, string dataId, [FromBody] Data data)
@@ -188,7 +188,7 @@ namespace Project.Controllers
                 }
                 return NotFound();
             }
-        }
+        }*/
 
         // DELETE api/<controller>/5
         [Route("api/application/{applicationId}/data/{id}")]
