@@ -5,7 +5,10 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
-
+using System.Net;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 namespace Project.Controllers
 {
     public class SubscriptionController : ApiController

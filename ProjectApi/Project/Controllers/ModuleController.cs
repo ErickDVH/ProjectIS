@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
-
+using System.Xml;
 namespace Project.Controllers
 {
     public class ModuleController : ApiController
@@ -31,6 +31,13 @@ namespace Project.Controllers
 
 
                 SqlDataReader reader = cmd.ExecuteReader();
+
+                
+                // Create an XML document to store the results
+                var doc = new XmlDocument();
+                var root = doc.CreateElement("Results");
+                doc.AppendChild(root);
+
                 while (reader.Read())
                 {
                     Module newModule = new Module()
@@ -42,6 +49,15 @@ namespace Project.Controllers
                     };
 
                     this.modules.Add(newModule);
+                    
+                    
+                    var element = doc.CreateElement("Result");
+                    element.SetAttribute("ID", reader["Id"].ToString());
+                    element.SetAttribute("Name", reader["Name"].ToString());
+                    element.SetAttribute("Creation date", reader["Creation_dt"].ToString());
+                    element.SetAttribute("Parent", (string)reader["Parent"]);
+
+                    root.AppendChild(element);
                 }
 
                 reader.Close();

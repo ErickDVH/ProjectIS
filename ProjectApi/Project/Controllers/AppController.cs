@@ -7,6 +7,8 @@ using System.Text;
 using System.Web;
 using System.Web.Http;
 using System.Xml.Linq;
+using System.Xml;
+
 
 namespace Project.Controllers
 {
@@ -29,6 +31,14 @@ namespace Project.Controllers
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 SqlDataReader reader = cmd.ExecuteReader();
+
+                
+                // Create an XML document to store the results
+                var doc = new XmlDocument();
+                var root = doc.CreateElement("Results");
+                doc.AppendChild(root);
+
+
                 while (reader.Read())
                 {
                     Application newApp = new Application()
@@ -40,6 +50,15 @@ namespace Project.Controllers
                     };
 
                     datas.Add(newApp);
+
+                    
+                    var element = doc.CreateElement("Result");
+                    element.SetAttribute("ID", reader["Id"].ToString());
+                    element.SetAttribute("Name", reader["Name"].ToString());
+                    element.SetAttribute("Creation date", reader["Creation_dt"].ToString());
+                    element.SetAttribute("Res_type", reader["Res_type"].ToString());
+
+                    root.AppendChild(element);
                 }
 
                 reader.Close();
@@ -73,6 +92,14 @@ namespace Project.Controllers
                 cmd.Parameters.AddWithValue("@IdApplication", id);
 
                 SqlDataReader reader = cmd.ExecuteReader();
+
+                
+                // Create an XML document to store the results
+                var doc = new XmlDocument();
+                var root = doc.CreateElement("Results");
+                doc.AppendChild(root);
+
+
                 if (reader.Read())
                 {
                     data = new Data()
@@ -81,6 +108,16 @@ namespace Project.Controllers
                         Content = (string)reader["Content"],
                         Creation_dt = (DateTime)reader["Creation_dt"]
                     };
+
+                    
+                    var element = doc.CreateElement("Result");
+                    element.SetAttribute("ID", reader["Id"].ToString());
+                    element.SetAttribute("Name", reader["Name"].ToString());
+                    element.SetAttribute("Creation date", reader["Creation_dt"].ToString());
+                    element.SetAttribute("Res_type", reader["Res_type"].ToString());
+
+                    root.AppendChild(element);
+
                 }
 
                 reader.Close();
