@@ -25,16 +25,21 @@ namespace MosquittoSubscriber
 
         private void client_messageReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            String status = "";
-            MessageBox.Show("Received: " + Encoding.UTF8.GetString(e.Message));
-            status = Encoding.UTF8.GetString(e.Message);
+            
+             XDocument xmlDoc = XDocument.Parse(e.Message);
+             string xmlString = Encoding.UTF8.GetString(xmlDoc);
+            // Get the value of the "value" element
+            string value = xmlString.Root.Element("value").Value;
 
-            if (status == "off")
+            MessageBox.Show("Received: " + value);
+            
+
+            if (value == "off")
             {
                 light_on.BeginInvoke((MethodInvoker)delegate { light_on.Hide(); });
                 light_off.BeginInvoke((MethodInvoker)delegate { light_off.Show(); });
             }
-            if (status == "on")
+            if (value == "on")
             {
                 light_on.BeginInvoke((MethodInvoker)delegate { light_on.Show(); });
                 light_off.BeginInvoke((MethodInvoker)delegate { light_off.Hide(); });

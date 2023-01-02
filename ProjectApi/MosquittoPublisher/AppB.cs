@@ -35,7 +35,21 @@ namespace MosquittoPubAndSub
         {
             if (mcClient.IsConnected)
             {
-                mcClient.Publish("lightbulb", Encoding.UTF8.GetBytes("on"));
+
+                    XDocument xmlDoc = new XDocument(
+                    new XDeclaration("1.0", "utf-8", "yes"),
+                    new XElement("root",
+                        new XElement("value", on)
+                    )
+                );
+
+                // Convert the XML document to a string
+                string xmlString = xmlDoc.ToString();
+
+                // Convert the string to a byte array
+                byte[] xmlBytes = Encoding.UTF8.GetBytes(xmlString);
+
+                mcClient.Publish("lightbulb", xmlBytes);
                 MessageBox.Show("Lightbulb is on!");
             }
         }
@@ -44,7 +58,22 @@ namespace MosquittoPubAndSub
         {
             if (mcClient.IsConnected)
             {
-                mcClient.Publish("lightbulb", Encoding.UTF8.GetBytes("off"));
+
+                    XDocument xmlDoc = new XDocument(
+                    new XDeclaration("1.0", "utf-8", "yes"),
+                    new XElement("root",
+                        new XElement("value", off)
+                    )
+                );
+
+                // Convert the XML document to a string
+                string xmlString = xmlDoc.ToString();
+
+                // Convert the string to a byte array
+                byte[] xmlBytes = Encoding.UTF8.GetBytes(xmlString);
+
+
+                mcClient.Publish("lightbulb", xmlBytes);
                 MessageBox.Show("Lightbulb is off!");
             }
         }
