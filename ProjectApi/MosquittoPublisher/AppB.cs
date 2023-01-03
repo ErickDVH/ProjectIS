@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using uPLibrary.Networking.M2Mqtt;
+using System.Xml;
+using System.Text;
 
 namespace MosquittoPubAndSub
 {
